@@ -1,0 +1,12 @@
+#!/bin/bash
+# Launcher for Woodsee's Lightroom Stream Deck Installer
+# Opens Terminal and runs the install script from the app bundle.
+
+RESOURCES="$(dirname "$0")/../Resources"
+
+osascript <<EOF
+tell application "Terminal"
+  activate
+  do script "cd '$RESOURCES' && ./install.sh"
+end tell
+EOF

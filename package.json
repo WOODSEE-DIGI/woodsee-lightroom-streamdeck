@@ -1,7 +1,7 @@
 {
-  "name": "com.woodseedigi.lightroom.mystory",
+  "name": "com.woodseedigi.lightroom.streamdeck",
   "version": "0.1.0",
-  "description": "Stream Deck plugin for tagging photos in Lightroom Classic for the MyStory project.",
+  "description": "Stream Deck plugin for tagging and culling photos in Lightroom Classic",
   "author": "woodsee",
   "license": "MIT",
   "private": true,

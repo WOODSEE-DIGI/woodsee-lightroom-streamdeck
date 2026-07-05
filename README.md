@@ -1,6 +1,6 @@
-# MyStory Lightroom Tagger
+# Woodsee's Lightroom Stream Deck
 
-Stream Deck plugin for tagging and culling photos in Lightroom Classic, built for the [MyStory](https://github.com/woodsee/woodsee-site/tree/main/mystory) project.
+Stream Deck plugin for tagging and culling photos in Lightroom Classic.
 
 Maps your tagging scheme directly to Stream Deck buttons — one press per action, no dropdowns needed.
 
@@ -23,14 +23,14 @@ Maps your tagging scheme directly to Stream Deck buttons — one press per actio
 
 ### Option 1: Installer app (recommended)
 
-1. Download `MyStory Lightroom Tagger Installer.app`
+1. Download `Woodsee's Lightroom Stream Deck Installer.app`
 2. Double-click to run
 3. Follow the 3-step prompt in Terminal
 4. Restart Lightroom if it was open
 
 ### Option 2: Double-click `.streamDeckPlugin`
 
-1. Double-click `MyStory-Lightroom-Tagger.streamDeckPlugin`
+1. Double-click `Woodsee-Lightroom-StreamDeck.streamDeckPlugin`
 2. Stream Deck installs the plugin automatically
 3. The Lightroom companion is installed on first launch
 4. Restart Lightroom to activate the companion
@@ -38,8 +38,8 @@ Maps your tagging scheme directly to Stream Deck buttons — one press per actio
 ### Option 3: Development (symlink)
 
 ```bash
-git clone https://github.com/woodsee/mystory-lightroom-tagger.git
-cd mystory-lightroom-tagger
+git clone https://github.com/WOODSEE-DIGI/woodsee-lightroom-streamdeck.git
+cd woodsee-lightroom-streamdeck
 npm install
 npm run build
 
