@@ -1,0 +1,143 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "UUID": "com.woodseedigi.lightroom.mystory",
+  "Name": "Woodsee's Lightroom Stream Deck",
+  "Version": "0.3.0.0",
+  "Author": "woodsee",
+  "Category": "Lightroom Classic",
+  "CategoryIcon": "assets/plugin/category-icon",
+  "CodePath": "bin/plugin.js",
+  "Description": "Tag and cull photos in Lightroom Classic. Color labels = narrative position, star ratings = priority.",
+  "Icon": "assets/plugin/marketplace-icon",
+  "SDKVersion": 2,
+  "Software": { "MinimumVersion": "7.1" },
+  "OS": [{ "Platform": "mac", "MinimumVersion": "13" }],
+  "Nodejs": { "Version": "20" },
+  "ApplicationsToMonitor": { "mac": ["com.adobe.LightroomClassic"] },
+  "Actions": [
+    {
+      "Name": "Red Label",
+      "UUID": "com.woodseedigi.lightroom.mystory.red",
+      "Icon": "assets/key/color-red",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Apply Red label — Opening / Hook (first 1–3 images)",
+      "States": [{ "Image": "assets/key/color-red", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Red" }]
+    },
+    {
+      "Name": "Yellow Label",
+      "UUID": "com.woodseedigi.lightroom.mystory.yellow",
+      "Icon": "assets/key/color-yellow",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Apply Yellow label — Rising Action (middle images)",
+      "States": [{ "Image": "assets/key/color-yellow", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Yellow" }]
+    },
+    {
+      "Name": "Green Label",
+      "UUID": "com.woodseedigi.lightroom.mystory.green",
+      "Icon": "assets/key/color-green",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Apply Green label — Climax / Turning Point",
+      "States": [{ "Image": "assets/key/color-green", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Green" }]
+    },
+    {
+      "Name": "Blue Label",
+      "UUID": "com.woodseedigi.lightroom.mystory.blue",
+      "Icon": "assets/key/color-blue",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Apply Blue label — Resolution / Outro (final images)",
+      "States": [{ "Image": "assets/key/color-blue", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Blue" }]
+    },
+    {
+      "Name": "Purple Label",
+      "UUID": "com.woodseedigi.lightroom.mystory.purple",
+      "Icon": "assets/key/color-purple",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Apply Purple label — Texture / Detail (inserts)",
+      "States": [{ "Image": "assets/key/color-purple", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Purple" }]
+    },
+    {
+      "Name": "Clear Label",
+      "UUID": "com.woodseedigi.lightroom.mystory.clear",
+      "Icon": "assets/key/color-clear",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Remove color label from the current photo.",
+      "States": [{ "Image": "assets/key/color-clear", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Clear" }]
+    },
+    {
+      "Name": "5 Stars",
+      "UUID": "com.woodseedigi.lightroom.mystory.stars5",
+      "Icon": "assets/key/stars-5",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Rate 5★ — Essential (must include)",
+      "States": [{ "Image": "assets/key/stars-5", "TitleAlignment": "middle", "ShowTitle": true, "Title": "★★★★★" }]
+    },
+    {
+      "Name": "4 Stars",
+      "UUID": "com.woodseedigi.lightroom.mystory.stars4",
+      "Icon": "assets/key/stars-4",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Rate 4★ — Strong (good candidate)",
+      "States": [{ "Image": "assets/key/stars-4", "TitleAlignment": "middle", "ShowTitle": true, "Title": "★★★★" }]
+    },
+    {
+      "Name": "3 Stars",
+      "UUID": "com.woodseedigi.lightroom.mystory.stars3",
+      "Icon": "assets/key/stars-3",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Rate 3★ — Usable (filler)",
+      "States": [{ "Image": "assets/key/stars-3", "TitleAlignment": "middle", "ShowTitle": true, "Title": "★★★" }]
+    },
+    {
+      "Name": "2 Stars",
+      "UUID": "com.woodseedigi.lightroom.mystory.stars2",
+      "Icon": "assets/key/stars-2",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Rate 2★ — Probably Cut",
+      "States": [{ "Image": "assets/key/stars-2", "TitleAlignment": "middle", "ShowTitle": true, "Title": "★★" }]
+    },
+    {
+      "Name": "1 Star",
+      "UUID": "com.woodseedigi.lightroom.mystory.stars1",
+      "Icon": "assets/key/stars-1",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Rate 1★ — Reference / Exclude",
+      "States": [{ "Image": "assets/key/stars-1", "TitleAlignment": "middle", "ShowTitle": true, "Title": "★" }]
+    },
+    {
+      "Name": "Unrated",
+      "UUID": "com.woodseedigi.lightroom.mystory.stars0",
+      "Icon": "assets/key/stars-0",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Set to Unreviewed (0 stars).",
+      "States": [{ "Image": "assets/key/stars-0", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Unrated" }]
+    },
+    {
+      "Name": "Previous Photo",
+      "UUID": "com.woodseedigi.lightroom.mystory.prev",
+      "Icon": "assets/key/nav-prev",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Move to the previous photo in the filmstrip.",
+      "States": [{ "Image": "assets/key/nav-prev", "TitleAlignment": "middle", "ShowTitle": true, "Title": "◀ Prev" }]
+    },
+    {
+      "Name": "Next Photo",
+      "UUID": "com.woodseedigi.lightroom.mystory.next",
+      "Icon": "assets/key/nav-next",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Move to the next photo in the filmstrip.",
+      "States": [{ "Image": "assets/key/nav-next", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Next ▶" }]
+    },
+    {
+      "Name": "Toggle Zoom",
+      "UUID": "com.woodseedigi.lightroom.mystory.zoom",
+      "Icon": "assets/key/view-zoom",
+      "Controllers": ["Keypad"],
+      "Tooltip": "Toggle zoom between Fit and 1:1.",
+      "States": [{ "Image": "assets/key/view-zoom", "TitleAlignment": "middle", "ShowTitle": true, "Title": "Zoom" }]
+    }
+  ],
+  "Profiles": [
+    { "Name": "profiles/mystory-15key", "DeviceType": 0, "Readonly": false, "DontAutoSwitchWhenInstalled": true, "AutoInstall": false },
+    { "Name": "profiles/mystory-mini", "DeviceType": 1, "Readonly": false, "DontAutoSwitchWhenInstalled": true, "AutoInstall": false }
+  ]
+}
