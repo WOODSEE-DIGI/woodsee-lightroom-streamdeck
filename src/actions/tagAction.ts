@@ -1,35 +1,75 @@
 import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
-import { bridge } from "../bridge.js";
+import { exec } from "node:child_process";
 
-/** Map each action UUID to its Lightroom command + value. */
-const COMMANDS: Record<string, { cmd: string; value?: string | number }> = {
-  "com.woodseedigi.lightroom.mystory.red":    { cmd: "label", value: "red" },
-  "com.woodseedigi.lightroom.mystory.yellow":  { cmd: "label", value: "yellow" },
-  "com.woodseedigi.lightroom.mystory.green":   { cmd: "label", value: "green" },
-  "com.woodseedigi.lightroom.mystory.blue":    { cmd: "label", value: "blue" },
-  "com.woodseedigi.lightroom.mystory.purple":  { cmd: "label", value: "purple" },
-  "com.woodseedigi.lightroom.mystory.clear":   { cmd: "label", value: "none" },
-  "com.woodseedigi.lightroom.mystory.stars5":  { cmd: "rate", value: 5 },
-  "com.woodseedigi.lightroom.mystory.stars4":  { cmd: "rate", value: 4 },
-  "com.woodseedigi.lightroom.mystory.stars3":  { cmd: "rate", value: 3 },
-  "com.woodseedigi.lightroom.mystory.stars2":  { cmd: "rate", value: 2 },
-  "com.woodseedigi.lightroom.mystory.stars1":  { cmd: "rate", value: 1 },
-  "com.woodseedigi.lightroom.mystory.stars0":  { cmd: "rate", value: 0 },
-  "com.woodseedigi.lightroom.mystory.prev":    { cmd: "prev" },
-  "com.woodseedigi.lightroom.mystory.next":    { cmd: "next" },
-  "com.woodseedigi.lightroom.mystory.zoom":    { cmd: "togglezoom" },
+/**
+ * Each button sends a keyboard shortcut directly to Lightroom via AppleScript.
+ * No companion plugin needed. No TCP bridge. Just keystrokes.
+ */
+
+interface Hotkey {
+  /** Character to keystroke (for regular keys) */
+  key?: string;
+  /** macOS virtual keycode (for special keys like arrows) */
+  keyCode?: number;
+  cmd?: boolean;
+  shift?: boolean;
+}
+
+const HOTKEYS: Record<string, Hotkey> = {
+  // Color labels — Lightroom defaults: 6=Red, 7=Yellow, 8=Green, 9=Blue
+  "com.woodseedigi.lightroom.mystory.red":    { key: "6" },
+  "com.woodseedigi.lightroom.mystory.yellow":  { key: "7" },
+  "com.woodseedigi.lightroom.mystory.green":   { key: "8" },
+  "com.woodseedigi.lightroom.mystory.blue":    { key: "9" },
+  // Purple + Clear need custom shortcuts set in Lightroom → Keyboard Shortcuts
+  "com.woodseedigi.lightroom.mystory.purple":  { key: "0", cmd: true },       // Set to Cmd+0 in LR
+  "com.woodseedigi.lightroom.mystory.clear":   { key: "0", cmd: true, shift: true }, // Set to Cmd+Shift+0 in LR
+
+  // Star ratings — Lightroom defaults: 0-5
+  "com.woodseedigi.lightroom.mystory.stars5":  { key: "5" },
+  "com.woodseedigi.lightroom.mystory.stars4":  { key: "4" },
+  "com.woodseedigi.lightroom.mystory.stars3":  { key: "3" },
+  "com.woodseedigi.lightroom.mystory.stars2":  { key: "2" },
+  "com.woodseedigi.lightroom.mystory.stars1":  { key: "1" },
+  "com.woodseedigi.lightroom.mystory.stars0":  { key: "0" },
+
+  // Navigation — arrow keys
+  "com.woodseedigi.lightroom.mystory.prev":    { keyCode: 123 },  // Left arrow
+  "com.woodseedigi.lightroom.mystory.next":    { keyCode: 124 },  // Right arrow
+
+  // Zoom
+  "com.woodseedigi.lightroom.mystory.zoom":    { key: "z" },
 };
 
-/** One class per action UUID — each sends its fixed command. */
+function sendHotkey(hk: Hotkey) {
+  const mods: string[] = [];
+  if (hk.cmd) mods.push("command down");
+  if (hk.shift) mods.push("shift down");
+  const modStr = mods.length ? `, ${mods.join(" and ")}` : "";
+
+  let script: string;
+  if (hk.keyCode !== undefined) {
+    script = `tell application "System Events" to key code ${hk.keyCode}${modStr}`;
+  } else if (hk.key) {
+    script = `tell application "System Events" to keystroke "${hk.key}"${modStr}`;
+  } else {
+    return;
+  }
+
+  exec(`osascript -e ${JSON.stringify(script)}`, (err) => {
+    if (err) console.error(`hotkey failed: ${err.message}`);
+  });
+}
+
 function makeTagAction(uuid: string) {
   @action({ UUID: uuid })
   class Tag extends SingletonAction {
     override async onKeyDown(ev: KeyDownEvent<Record<string, never>>): Promise<void> {
-      const mapping = COMMANDS[uuid];
-      if (mapping) bridge.sendCommand(mapping.cmd, mapping.value);
+      const hk = HOTKEYS[uuid];
+      if (hk) sendHotkey(hk);
     }
   }
   return new Tag();
 }
 
-export const tagActions = Object.keys(COMMANDS).map(makeTagAction);
+export const tagActions = Object.keys(HOTKEYS).map(makeTagAction);

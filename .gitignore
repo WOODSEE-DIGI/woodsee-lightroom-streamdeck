@@ -6,3 +6,5 @@ logs/
 installer/MyStory*.app/
 installer/MyStory*.streamDeckPlugin
 *.streamDeckPlugin
+
+installer/Woodsee*.app/

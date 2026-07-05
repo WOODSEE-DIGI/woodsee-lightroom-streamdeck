@@ -1,6 +1,6 @@
 --[[
-  MyStory Lightroom Tagger — Companion Plugin
-
+  Woodsee's Lightroom Stream Deck — Companion Plugin
+  
   TCP server that accepts commands from the Stream Deck plugin
   and executes Lightroom Classic SDK calls.
 
@@ -16,7 +16,7 @@ local LrLogger          = import "LrLogger"
 local LrSelection       = import "LrSelection"
 local LrApplicationView = import "LrApplicationView"
 
-local logger = LrLogger("MyStoryTagger")
+local logger = LrLogger("WoodseeStreamDeck")
 logger:enable("print")
 
 local CMD_PORT  = 9876
@@ -46,10 +46,8 @@ end
 -- Command dispatcher
 ----------------------------------------------------------------------
 local function handleCommand(message)
-    -- message is a JSON string: {"cmd":"...", "value":"..."}
     local cmd, value
 
-    -- Try JSON parse (simple pattern, no external lib needed)
     cmd  = string.match(message, '"cmd"%s*:%s*"([^"]*)"')
     value = string.match(message, '"value"%s*:%s*"?([^",}]-)"?')
 
@@ -61,29 +59,22 @@ local function handleCommand(message)
     cmd = string.lower(cmd)
     logger:info("cmd=" .. cmd .. " value=" .. tostring(value))
 
-    -- Color labels
     if cmd == "label" then
         local valid = { red=true, yellow=true, green=true, blue=true, purple=true, none=true }
         if value and valid[value] then
             LrSelection.setColorLabel(value)
         end
-
-    -- Star rating
     elseif cmd == "rate" then
         local n = tonumber(value)
         if n and n >= 0 and n <= 5 then
             LrSelection.setRating(math.floor(n))
         end
-
-    -- Flag
     elseif cmd == "pick" then
         LrSelection.flagAsPick()
     elseif cmd == "reject" then
         LrSelection.flagAsReject()
     elseif cmd == "unflag" then
         LrSelection.removeFlag()
-
-    -- Navigation
     elseif cmd == "next" then
         LrSelection.nextPhoto()
     elseif cmd == "prev" then
@@ -92,8 +83,6 @@ local function handleCommand(message)
         LrSelection.selectFirstPhoto()
     elseif cmd == "last" then
         LrSelection.selectLastPhoto()
-
-    -- View
     elseif cmd == "loupe" then
         LrApplicationView.showView("loupe")
     elseif cmd == "grid" then
@@ -108,16 +97,12 @@ local function handleCommand(message)
         LrApplicationView.zoomIn()
     elseif cmd == "zoomout" then
         LrApplicationView.zoomOut()
-
-    -- Module
     elseif cmd == "module" then
         if value then
             LrApplicationView.switchToModule(value)
         end
-
-    -- Explicit state request
     elseif cmd == "getstate" then
-        -- fall through to pushState below
+        -- fall through to pushState
     end
 
     pushState()
@@ -126,12 +111,12 @@ end
 ----------------------------------------------------------------------
 -- TCP server
 ----------------------------------------------------------------------
-LrTasks.startAsyncTask(function()
-    LrFunctionContext.callWithContext("mystory_tagger_server", function(context)
+local function startServer()
+    logger:info("Starting TCP server on ports " .. CMD_PORT .. "/" .. STATE_PORT)
+
+    local ok1, err1 = pcall(function()
         -- State push socket (Lightroom -> Stream Deck)
-        local stateListener = LrSocket.bind {
-            functionContext = context,
-            plugin          = _PLUGIN,
+        LrSocket.bind {
             port            = STATE_PORT,
             mode            = "send",
             onConnected = function(socket, port)
@@ -147,11 +132,15 @@ LrTasks.startAsyncTask(function()
                 logger:warn("state socket error: " .. tostring(err))
             end,
         }
+    end)
 
+    if not ok1 then
+        logger:warn("Failed to bind state port " .. STATE_PORT .. ": " .. tostring(err1))
+    end
+
+    local ok2, err2 = pcall(function()
         -- Command receive socket (Stream Deck -> Lightroom)
-        local cmdListener = LrSocket.bind {
-            functionContext = context,
-            plugin          = _PLUGIN,
+        LrSocket.bind {
             port            = CMD_PORT,
             mode            = "receive",
             onConnected = function(socket, port)
@@ -167,12 +156,30 @@ LrTasks.startAsyncTask(function()
                 logger:warn("command socket error: " .. tostring(err))
             end,
         }
-
-        logger:info("MyStory Tagger listening on ports " .. CMD_PORT .. " (cmd) / " .. STATE_PORT .. " (state)")
-
-        -- Keep alive
-        while true do
-            LrTasks.sleep(1)
-        end
     end)
+
+    if not ok2 then
+        logger:warn("Failed to bind command port " .. CMD_PORT .. ": " .. tostring(err2))
+    end
+
+    logger:info("MyStory Tagger server started")
+end
+
+----------------------------------------------------------------------
+-- Startup
+----------------------------------------------------------------------
+LrTasks.startAsyncTask(function()
+    local ok, err = pcall(function()
+        LrFunctionContext.callWithContext("woodsee_streamdeck_server", function(context)
+            startServer()
+
+            -- Keep alive
+            while true do
+                LrTasks.sleep(1)
+            end
+        end)
+    end)
+    if not ok then
+        logger:warn("Startup failed: " .. tostring(err))
+    end
 end)
