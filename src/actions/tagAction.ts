@@ -1,5 +1,5 @@
 import { action, KeyDownEvent, SingletonAction } from "@elgato/streamdeck";
-import { bridge } from "../bridge";
+import { bridge } from "../bridge.js";
 
 /** Map each action UUID to its Lightroom command + value. */
 const COMMANDS: Record<string, { cmd: string; value?: string | number }> = {

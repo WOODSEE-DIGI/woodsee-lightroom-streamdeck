@@ -1,6 +1,6 @@
 import streamDeck from "@elgato/streamdeck";
-import { bridge } from "./bridge";
-import { tagActions } from "./actions/tagAction";
+import { bridge } from "./bridge.js";
+import { tagActions } from "./actions/tagAction.js";
 
 for (const act of tagActions) {
   streamDeck.actions.registerAction(act);
