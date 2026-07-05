@@ -1,0 +1,7 @@
+node_modules/
+bin/
+*.map
+.DS_Store
+installer/MyStory*.app/
+installer/MyStory*.streamDeckPlugin
+*.streamDeckPlugin

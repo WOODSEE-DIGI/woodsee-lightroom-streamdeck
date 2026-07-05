@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" rx="16" fill="#1a1a1a"/>
+  <circle cx="40" cy="52" r="16" fill="#e11d48"/>
+  <circle cx="72" cy="52" r="16" fill="#eab308"/>
+  <circle cx="104" cy="52" r="16" fill="#16a34a"/>
+  <circle cx="56" cy="84" r="16" fill="#2563eb"/>
+  <circle cx="88" cy="84" r="16" fill="#9333ea"/>
+  <text x="72" y="128" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#888" text-anchor="middle">COLOR</text>
+</svg>
